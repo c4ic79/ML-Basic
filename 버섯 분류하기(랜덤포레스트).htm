@@ -1,0 +1,116 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# In[77]:
+
+
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+from sklearn import datasets
+from sklearn.model_selection import train_test_split
+from sklearn.model_selection import cross_val_score
+
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import accuracy_score,classification_report 
+from sklearn import metrics
+
+
+# In[43]:
+
+
+df=pd.read_csv('C://Users//Administrator//Downloads//mushrooms.csv')
+
+
+# In[44]:
+
+
+df.isnull().sum()
+
+
+# In[45]:
+
+
+df.describe()
+
+
+# In[51]:
+
+
+x=df.drop('class',axis=1)
+y=df['class']
+
+x=pd.get_dummies(x,columns=x.columns)
+x.head()
+
+
+# In[54]:
+
+
+X_train,X_test,y_train,y_test=train_test_split(x,y,test_size=0.3,random_state=42)
+
+
+# In[58]:
+
+
+sc=StandardScaler()
+X_train=sc.fit_transform(X_train)
+X_test=sc.transform(X_test)
+
+
+# In[60]:
+
+
+model=RandomForestClassifier(n_estimators=50,criterion='entropy',random_state=42)
+model.fit(X_train,y_train)
+
+
+# In[65]:
+
+
+pred=model.predict(X_test)
+score=accuracy_score(y_test,pred)
+score
+
+
+# In[114]:
+
+
+print(pred[:14])
+print(y_test[:14])
+
+
+# In[66]:
+
+
+print(classification_report(y_test,pred))
+
+
+# In[107]:
+
+
+df=pd.read_csv('C://Users//Administrator//Downloads//mushrooms.csv')
+df.head()
+x=df.drop('class',axis=1)
+n=df.shape[1]
+
+
+plt.barh(range(n-1),model.feature_importances_,align='center')
+plt.yticks(np.arange(n-1),x.columns)
+
+plt.ylim(-1,n)
+plt.show()
+
+
+# In[97]:
+
+
+len(model.feature_importances_)
+
+
+# In[105]:
+
+
+
+
